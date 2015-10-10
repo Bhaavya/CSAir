@@ -1,0 +1,34 @@
+{
+  "data sources": [
+    "http://www.gcmap.com/",
+    "http://www.theodora.com/country_digraphs.html",
+    "http://www.citypopulation.de/world/Agglomerations.html",
+    "http://www.mongabay.com/cities_urban_01.htm",
+    "http://en.wikipedia.org/wiki/Urban_agglomeration",
+    "http://www.worldtimezone.com/standard.html"
+  ],
+  "metros": [
+    {
+      "code": "MEX",
+      "continent": "North America",
+      "coordinates": {
+        "N": 19,
+        "W": 99
+      },
+      "country": "MX",
+      "name": "Mexico City",
+      "population": 23400000,
+      "region": 1,
+      "timezone": -6
+    }
+  ],
+  "routes": [
+    {
+      "distance": 4231,
+      "ports": [
+        "LIM",
+        "MEX"
+      ]
+    }
+  ]
+}

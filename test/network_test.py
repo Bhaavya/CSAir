@@ -1,7 +1,5 @@
 import unittest
-from GraphLib.Network import Network
-from GraphLib.City import City
-from GraphLib.Route import Route
+from graph_lib.network import Network, City, Route
 
 city1 = {
             "code": "MNL",
@@ -64,27 +62,28 @@ DESTINATION_PORT = 1
 
 class NetworkTest(unittest.TestCase):
     # tests functions for graph query
-    network = Network()
-    city1 = City(city1)
-    city2 = City(city2)
-    city3 = City(city3)
-    route1 = Route(route1)
-    route2 = Route(route2)
-    route3 = Route(route3)
-    route4 = Route(route4)
-    route5 = Route(route5)
-    route6 = Route(route6)
-    routes = [route1, route2, route3, route4, route5, route6]
-    cities = [city1, city2, city3]
-    network.insert_city(city1)
-    network.insert_city(city2)
-    network.insert_city(city3)
-    network.insert_route(route1)
-    network.insert_route(route2)
-    network.insert_route(route3)
-    network.insert_route(route4)
-    network.insert_route(route5)
-    network.insert_route(route6)
+    def setUp(self):
+        self.network = Network()
+        self.city1 = City(city1)
+        self.city2 = City(city2)
+        self.city3 = City(city3)
+        self.route1 = Route(route1)
+        self.route2 = Route(route2)
+        self.route3 = Route(route3)
+        self.route4 = Route(route4)
+        self.route5 = Route(route5)
+        self.route6 = Route(route6)
+        self.routes = [self.route1, self.route2, self.route3, self.route4, self.route5, self.route6]
+        self.cities = [self.city1, self.city2, self.city3]
+        self.network.insert_city(self.city1)
+        self.network.insert_city(self.city2)
+        self.network.insert_city(self.city3)
+        self.network.insert_route(self.route1)
+        self.network.insert_route(self.route2)
+        self.network.insert_route(self.route3)
+        self.network.insert_route(self.route4)
+        self.network.insert_route(self.route5)
+        self.network.insert_route(self.route6)
 
     def test_insert(self):
         self.assertItemsEqual([self.city1, self.city2, self.city3], self.network.cities)
@@ -133,5 +132,38 @@ class NetworkTest(unittest.TestCase):
     def test_get_hub_cities(self):
         self.assertItemsEqual(self.network.get_hub_cities(), ['MNL', 'SGN', 'MOW'])
 
-    def test_visualise(self):
-        self.assertEqual(self.network.visualise(),'http://www.gcmap.com/mapui?P=MNL-SGN,MOW-MNL,MOW-SGN,SGN-MNL,MNL-MOW,SGN-MOW&MS=bm&DU=mi')
+    def test_visualize(self):
+        self.assertEqual(self.network.visualize(), 'http://www.gcmap.com/mapui?P=MNL-SGN,MOW-MNL,MOW-SGN,SGN-MNL,MNL-MOW,SGN-MOW&MS=bm&DU=mi')
+
+    def test_get_shortest_route(self):
+        self.assertEqual(self.network.get_shortest_route('MNL', 'MOW'), ['MNL', 'SGN', 'MOW'])
+
+    def test_edit_code(self):
+        self.network.edit_code('MNL', 'NMNL', self.network.cities[0])
+        self.assertEquals(self.network.cities[0].code, 'NMNL')
+        # check if code is edited in its routes
+        self.assertEquals(self.network.routes[0].ports[SOURCE_PORT], 'NMNL')
+        self.assertEquals(self.network.routes[1].ports[DESTINATION_PORT], 'NMNL')
+        self.assertEquals(self.network.routes[3].ports[DESTINATION_PORT], 'NMNL')
+        self.assertEquals(self.network.routes[4].ports[SOURCE_PORT], 'NMNL')
+        self.network.edit_code('NMNL', 'MNL', self.network.cities[0])
+
+    def test_edit_name(self):
+        self.network.edit_name('New Manila', self.network.cities[0])
+        self.assertEquals(self.network.cities[0].name, 'New Manila')
+
+    def test_edit_country(self):
+        self.network.edit_country('NPH', self.network.cities[0])
+        self.assertEquals(self.network.cities[0].country, 'NPH')
+
+    def test_edit_continent(self):
+        self.network.edit_continent('New Asia', self.network.cities[0])
+        self.assertEquals(self.network.cities[0].continent, 'New Asia')
+
+    def test_edit_timezone(self):
+        self.network.edit_timezone(1, self.network.cities[0])
+        self.assertEquals(self.network.cities[0].timezone, 1)
+
+    def test_edit_region(self):
+        self.network.edit_region(1, self.network.cities[0])
+        self.assertEquals(self.network.cities[0].region, 1)
